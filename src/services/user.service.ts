@@ -1,21 +1,23 @@
 import { BaseEntity } from "../models/base-entity.interface";
 import { BaseUser, User, mockUsers } from "../models/user.interface";
 import { uuid } from "uuidv4";
+import { IUserRepository } from "../repository/user-repository";
 
 export class UserService {
-  constructor() {}
-  private users = mockUsers;
+  constructor(private repository: IUserRepository) {}
 
-  private getIndex(uuid: string): number {
-    return this.users.findIndex((u) => u.uuid === uuid);
-  }
+  // public users = mockUsers;
+
+  // public getIndex(uuid: string): number {
+  //   return this.users.findIndex((u) => u.uuid === uuid);
+  // }
 
   public async getAll(): Promise<User[]> {
-    return Object.values(this.users);
+    return this.repository.findAll();
   }
-
-  public async get(id: string): Promise<User> {
-    return this.users[this.getIndex(id)];
+  /*
+  public async get(uuid: string): Promise<User> {
+    return this.users[this.getIndex(uuid)];
   }
 
   public async create(newUser: BaseUser): Promise<User[]> {
@@ -53,4 +55,6 @@ export class UserService {
     this.users.splice(this.getIndex(uuid), 1);
     return this.users;
   }
+
+*/
 }

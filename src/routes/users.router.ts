@@ -1,20 +1,17 @@
 import express, { Request, Response } from "express";
 import { UserService } from "../services/user.service";
 import { BaseUser, User } from "../models/user.interface";
+import { UserController } from "../controllers/users.controller";
+import { UserRepository } from "../repository/user-repository";
 
 export const usersRouter = express.Router();
-let service = new UserService();
 
-usersRouter.get("/users/", async (req: Request, res: Response) => {
-  console.log("Get");
-  try {
-    const users: User[] = await service.getAll();
-    res.status(200).send(users);
-  } catch {
-    // res.status(500).send("Erro ao obter usuarios");
-  }
-});
+// const service = new UserService(new UserRepository());
+const userController = new UserController();
 
+usersRouter.get("/users/", userController.getAll);
+
+/*
 usersRouter.get("/users/:uuid", async (req: Request, res: Response) => {
   const uuid: string = req.params.uuid;
 
@@ -71,3 +68,4 @@ usersRouter.delete("/users/:uuid", async (req: Request, res: Response) => {
     // res.status(500).send("Erro ao deletar usuario");
   }
 });
+*/
