@@ -1,9 +1,12 @@
-import { User, mockUsers } from "../models/user.interface";
+import { User } from "../models/user.interface";
 import { knexClient } from "../database/knex-config";
 
 export interface IUserRepository {
   findAll(): Promise<User[]>;
   findById(uuid: string): Promise<User | null>;
+  create(user: User): Promise<User | null>;
+  update(user: User): Promise<User | null>;
+  delete(uuid: string): Promise<User[] | null>;
 }
 
 export class UserRepository implements IUserRepository {
@@ -13,6 +16,22 @@ export class UserRepository implements IUserRepository {
   }
 
   public async findById(uuid: string): Promise<User | null> {
-    return null;
+    const query = knexClient.from("users").where("uuid", uuid).first();
+    return query;
+  }
+
+  public async create(user: User): Promise<User | null> {
+    console.log("create");
+    return user;
+  }
+
+  public async update(user: User): Promise<User | null> {
+    console.log("Update");
+    return user;
+  }
+
+  public async delete(uuid: string): Promise<User[] | null> {
+    console.log("Delete");
+    return this.findAll();
   }
 }

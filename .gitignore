@@ -132,6 +132,3 @@ dist
 # VS Code
 
 *.code-workspace
-
-# .env variables
-# .env
