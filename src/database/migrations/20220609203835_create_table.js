@@ -4,8 +4,10 @@ const up = (knex) => {
     table.string("name", 50).notNullable;
     table.string("lastName", 50).notNullable;
     table.integer("age");
-    table.string("email");
+    table.string("email").notNullable;
     table.string("document");
+    table.datetime("created");
+    table.datetime("deleted");
   });
 };
 

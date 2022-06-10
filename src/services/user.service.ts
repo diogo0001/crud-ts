@@ -1,6 +1,6 @@
 import { BaseUser, User } from "../models/user.interface";
 import { uuid } from "uuidv4";
-import { IUserRepository } from "../repository/user-repository";
+import { IUserRepository } from "../repository/user.repository";
 
 export class UserService {
   constructor(private repository: IUserRepository) {}
@@ -14,11 +14,16 @@ export class UserService {
   }
 
   public async create(newUser: BaseUser): Promise<User | null> {
-    const id = uuid();
+    // fazer as validações do user
+
     let user: User = newUser as User;
-    user.uuid = id;
+    user.uuid = uuid();
+    user.created = new Date();
+
+    // console.log(`Service create: ${JSON.stringify(user, undefined, 2)}`);
+
     this.repository.create(user);
-    return this.repository.findById(id);
+    return user;
   }
 
   public async update(
@@ -26,23 +31,30 @@ export class UserService {
     userUpdate: BaseUser
   ): Promise<User | null> {
     const user = await this.repository.findById(uuid);
-
     if (!user) {
       return null;
     }
-
     const updatedUser: User = { uuid, ...userUpdate };
 
     return this.repository.update(updatedUser);
   }
 
-  public async remove(uuid: string): Promise<User[] | null> {
+  public async removeSoft(uuid: string): Promise<User | null> {
     const user = await this.repository.findById(uuid);
+    if (!user) {
+      return null;
+    }
+    user.deleted = new Date();
 
+    return this.repository.update(user);
+  }
+
+  public async removeHard(uuid: string): Promise<User[] | null> {
+    const user = await this.repository.findById(uuid);
     if (!user) {
       return null;
     }
 
-    return this.remove(uuid);
+    return this.repository.delete(uuid);
   }
 }

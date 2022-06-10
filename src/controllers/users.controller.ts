@@ -1,6 +1,6 @@
 import { UserService } from "../services/user.service";
 import { User, BaseUser } from "../models/user.interface";
-import { UserRepository } from "../repository/user-repository";
+import { UserRepository } from "../repository/user.repository";
 import { Request, Response } from "express";
 
 const service = new UserService(new UserRepository());
@@ -49,7 +49,7 @@ export class UserController {
 
   public async remove(req: Request, res: Response): Promise<Response> {
     try {
-      const deletedUser = await service.remove(req.params.uuid as string);
+      const deletedUser = await service.removeSoft(req.params.uuid as string);
       return res.status(200).json(deletedUser);
     } catch {
       return res.status(500).send("Erro ao deletar usuario");
