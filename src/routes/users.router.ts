@@ -1,13 +1,14 @@
-import express, { Request, Response } from "express";
+import express from "express";
 import { UserController } from "../controllers/users.controller";
+import { verifyToken } from "../middleware/auth.token";
 
 export const usersRouter = express.Router();
 
 const userController = new UserController();
 
 usersRouter
-  .get("/users/", userController.getAll)
-  .get("/users/:uuid", userController.getById)
-  .post("/users/", userController.create)
-  .put("/users/:uuid", userController.update)
-  .delete("/users/:uuid", userController.remove);
+  .get("/", userController.getAll)
+  .get("/:uuid", verifyToken, userController.getById)
+  .post("/", verifyToken, userController.create)
+  .put("/:uuid", verifyToken, userController.update)
+  .delete("/:uuid", verifyToken, userController.remove);

@@ -13,16 +13,18 @@ export class UserService {
     return this.repository.findById(uuid);
   }
 
+  public async getByEmail(email: string): Promise<User | null> {
+    return this.repository.findByEmail(email);
+  }
+
   public async create(newUser: BaseUser): Promise<User | null> {
     // fazer as validações do user
 
     let user: User = newUser as User;
     user.uuid = uuid();
     user.created = new Date();
-
-    // console.log(`Service create: ${JSON.stringify(user, undefined, 2)}`);
-
     this.repository.create(user);
+
     return user;
   }
 
@@ -31,15 +33,21 @@ export class UserService {
     userUpdate: BaseUser
   ): Promise<User | null> {
     const user = await this.repository.findById(uuid);
+
     if (!user) {
       return null;
     }
-    const updatedUser: User = { uuid, ...userUpdate };
+    const updatedUser: User = {
+      uuid: uuid,
+      ...userUpdate,
+      password: user.password,
+      token: user.token,
+    };
 
     return this.repository.update(updatedUser);
   }
 
-  public async removeSoft(uuid: string): Promise<User | null> {
+  public async softRemove(uuid: string): Promise<User | null> {
     const user = await this.repository.findById(uuid);
     if (!user) {
       return null;
@@ -49,7 +57,7 @@ export class UserService {
     return this.repository.update(user);
   }
 
-  public async removeHard(uuid: string): Promise<User[] | null> {
+  public async hardRemove(uuid: string): Promise<User[] | null> {
     const user = await this.repository.findById(uuid);
     if (!user) {
       return null;

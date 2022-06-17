@@ -8,7 +8,7 @@ const service = new UserService(new UserRepository());
 export class UserController {
   public async getAll(req: Request, res: Response): Promise<Response> {
     try {
-      const users: User[] = await service.getAll();
+      const users: BaseUser[] = await service.getAll();
       return res.json(users);
     } catch {
       return res.status(500).send("Erro ao obter usuarios");
@@ -49,7 +49,7 @@ export class UserController {
 
   public async remove(req: Request, res: Response): Promise<Response> {
     try {
-      const deletedUser = await service.removeSoft(req.params.uuid as string);
+      const deletedUser = await service.softRemove(req.params.uuid as string);
       return res.status(200).json(deletedUser);
     } catch {
       return res.status(500).send("Erro ao deletar usuario");
